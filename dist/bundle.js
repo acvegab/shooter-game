@@ -1,10 +1,78 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 Object.defineProperty(exports, "__esModule", { value: true });
-class GameObject {
-    constructor(x, y, w, h, color, ctx) {
-        this.speed = 1;
-        this.freeWill = false;
+var game_object_class_1 = require("./game-object.class");
+
+var EnemyA = function (_game_object_class_1$) {
+    _inherits(EnemyA, _game_object_class_1$);
+
+    function EnemyA(x, y, w, h, color, ctx) {
+        _classCallCheck(this, EnemyA);
+
+        var _this = _possibleConstructorReturn(this, (EnemyA.__proto__ || Object.getPrototypeOf(EnemyA)).call(this, x, y, w, h, color, ctx));
+
+        _this.freeWill = false;
+        _this.speed = .8;
+        return _this;
+    }
+
+    return EnemyA;
+}(game_object_class_1.GameObject);
+
+exports.EnemyA = EnemyA;
+
+},{"./game-object.class":3}],2:[function(require,module,exports){
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var game_object_class_1 = require("./game-object.class");
+
+var EnemyB = function (_game_object_class_1$) {
+    _inherits(EnemyB, _game_object_class_1$);
+
+    function EnemyB(x, y, w, h, color, ctx) {
+        _classCallCheck(this, EnemyB);
+
+        var _this = _possibleConstructorReturn(this, (EnemyB.__proto__ || Object.getPrototypeOf(EnemyB)).call(this, x, y, w, h, color, ctx));
+
+        _this.freeWill = false;
+        _this.speed = 1.2;
+        return _this;
+    }
+
+    return EnemyB;
+}(game_object_class_1.GameObject);
+
+exports.EnemyB = EnemyB;
+
+},{"./game-object.class":3}],3:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+
+var GameObject = function () {
+    function GameObject(x, y, w, h, color, ctx) {
+        _classCallCheck(this, GameObject);
+
+        this.speed = 10;
+        this.speedX = 0;
         this.hp = 1;
         this.x = x;
         this.y = y;
@@ -15,129 +83,272 @@ class GameObject {
         this.color = color;
         this.update();
     }
-    update() {
-        this.context.fillStyle = this.color;
-        this.context.fillRect(this.x, this.y, this.width, this.height);
-    }
-    setSpeed(speed) {
-        this.speed = speed;
-        return this;
-    }
-    addFreeWill() {
-        this.freeWill = true;
-    }
-    moveFront() {
-        this.x += (this.speed * 10);
-    }
-    moveBack() {
-        this.x -= (this.speed * 10);
-    }
-    jump() {
-        let goingDown = false;
-        const me = this;
-        const limit = 150;
-        clearInterval(me.jumping);
-        this.jumping = setInterval(() => {
-            if (me.y > limit && !goingDown) {
-                me.y -= 3;
-                console.log('jumping: ' + me.y);
-            }
-            else {
-                goingDown = true;
-                me.y += 3;
-                if (me.y > me.originalY) {
-                    clearInterval(me.jumping);
-                    me.y = me.originalY;
-                    goingDown = false;
-                }
-            }
-        }, 10);
-    }
-}
+
+    _createClass(GameObject, [{
+        key: "update",
+        value: function update() {
+            this.x += this.speedX;
+            this.clearSpeed();
+            this.context.fillStyle = this.color;
+            this.context.fillRect(this.x, this.y, this.width, this.height);
+        }
+    }, {
+        key: "moveFront",
+        value: function moveFront() {
+            this.speedX += this.speed;
+        }
+    }, {
+        key: "moveBack",
+        value: function moveBack() {
+            this.speedX -= this.speed;
+        }
+    }, {
+        key: "clearSpeed",
+        value: function clearSpeed() {
+            this.speedX = 0;
+        }
+    }]);
+
+    return GameObject;
+}();
+
 exports.GameObject = GameObject;
 
-},{}],2:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 Object.defineProperty(exports, "__esModule", { value: true });
-const game_object_class_1 = require("./game-object.class");
-class Game {
-    constructor() {
+var enemy_a_class_1 = require("./enemy-a.class");
+var enemy_b_class_1 = require("./enemy-b.class");
+var game_object_class_1 = require("./game-object.class");
+var obstacle_class_1 = require("./obstacle.class");
+var player_class_1 = require("./player.class");
+
+var Game = function () {
+    function Game() {
+        _classCallCheck(this, Game);
+
         this.startGame();
     }
-    startGame() {
-        // Level to play
-        this.level = 1;
-        // Canvas setup
-        this.canvas = document.getElementById('canvas');
-        this.canvas.width = 800;
-        this.canvas.height = 270;
-        this.context = this.canvas.getContext('2d');
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        // Function for canvas refreshing
-        setInterval(() => this.updateGameArea(), 20);
-        // Add elements: players, obstacles and enemies
-        this.setLevelElements(this.level);
-        this.addEvents();
-    }
-    setLevelElements(level) {
-        // General elements
-        this.floor = new game_object_class_1.GameObject(0, 250, 800, 20, '#667292', this.context);
-        switch (level) {
-            case 1:
-                // Add elements: players, obstacles and enemies
-                this.player = new game_object_class_1.GameObject(20, 210, 10, 40, '#907d61', this.context).setSpeed(1.5);
-                this.obstacles = [
-                    new game_object_class_1.GameObject(120, 230, 20, 20, '#8d9db6', this.context).setSpeed(0),
-                    new game_object_class_1.GameObject(280, 230, 20, 20, '#8d9db6', this.context).setSpeed(0),
-                ];
-                this.enemies = [
-                    new game_object_class_1.GameObject(150, 210, 10, 40, '#c83349', this.context).setSpeed(1.2),
-                    new game_object_class_1.GameObject(240, 210, 10, 40, '#c83349', this.context).setSpeed(1.2),
-                    new game_object_class_1.GameObject(480, 210, 10, 40, '#c83349', this.context).setSpeed(.8),
-                ];
-                break;
+
+    _createClass(Game, [{
+        key: "startGame",
+        value: function startGame() {
+            var _this = this;
+
+            // Level to play
+            this.level = 1;
+            // Canvas setup
+            this.canvas = document.getElementById('canvas');
+            this.canvas.width = 800;
+            this.canvas.height = 270;
+            this.context = this.canvas.getContext('2d');
+            document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+            // Function for canvas refreshing
+            setInterval(function () {
+                return _this.updateGameArea();
+            }, 20);
+            // Add elements: players, obstacles and enemies
+            this.createPlayer();
+            this.createObstacles();
+            this.createEnemies();
+            this.setLevelElements(this.level);
+            this.addEvents();
         }
-    }
-    clear() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-    updateGameArea() {
-        this.clear();
-        this.player.update();
-        this.obstacles[0].update();
-        this.obstacles[1].update();
-        this.enemies[0].update();
-        this.enemies[1].update();
-        this.enemies[2].update();
-        this.floor.update();
-    }
-    addEvents() {
-        window.addEventListener('keydown', (e) => this.checkKey(e), false);
-    }
-    checkKey(e) {
-        const code = e.keyCode;
-        switch (code) {
-            case 37:
-                this.player.moveBack();
-                console.log('Left');
-                break; // Left key
-            case 38:
-                this.player.jump();
-                console.log('Up');
-                break; // Up key
-            case 39:
-                this.player.moveFront();
-                console.log('Right');
-                break; // Right key
-            case 40:
-                console.log('Down');
-                break; // Down key
-            default: console.log(code); // Everything else
+    }, {
+        key: "setLevelElements",
+        value: function setLevelElements(level) {
+            // General elements
+            this.floor = new game_object_class_1.GameObject(0, 250, 800, 20, '#667292', this.context);
+            switch (level) {
+                case 1:
+                    // Add elements: players, obstacles and enemies
+                    break;
+            }
         }
-    }
-}
-const game = new Game();
+    }, {
+        key: "createPlayer",
+        value: function createPlayer() {
+            this.player = new player_class_1.Player(20, 210, 10, 40, '#907d61', this.context);
+        }
+    }, {
+        key: "createObstacles",
+        value: function createObstacles() {
+            this.obstacles = [new obstacle_class_1.Obstacle(120, 230, 20, 20, '#8d9db6', this.context), new obstacle_class_1.Obstacle(280, 230, 20, 20, '#8d9db6', this.context)];
+        }
+    }, {
+        key: "createEnemies",
+        value: function createEnemies() {
+            this.enemies = [new enemy_a_class_1.EnemyA(150, 210, 10, 40, '#c83349', this.context), new enemy_a_class_1.EnemyA(240, 210, 10, 40, '#c83349', this.context), new enemy_b_class_1.EnemyB(480, 210, 10, 40, '#c83349', this.context)];
+        }
+    }, {
+        key: "clear",
+        value: function clear() {
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+    }, {
+        key: "updateGameArea",
+        value: function updateGameArea() {
+            this.clear();
+            this.player.update();
+            this.obstacles[0].update();
+            this.obstacles[1].update();
+            this.enemies[0].update();
+            this.enemies[1].update();
+            this.enemies[2].update();
+            this.floor.update();
+        }
+    }, {
+        key: "addEvents",
+        value: function addEvents() {
+            var _this2 = this;
+
+            window.addEventListener('keydown', function (e) {
+                return _this2.checkKey(e);
+            }, false);
+            window.addEventListener('keyup', function (e) {
+                return _this2.checkKey(e);
+            }, false);
+        }
+    }, {
+        key: "checkKey",
+        value: function checkKey(e) {
+            var code = e.keyCode;
+            if (e.type === 'keydown') {
+                switch (code) {
+                    case 37:
+                        this.player.moveBack();
+                        console.log('Left');
+                        break; // Left key
+                    case 38:
+                        this.player.jump();
+                        console.log('Up');
+                        break; // Up key
+                    case 39:
+                        this.player.moveFront();
+                        console.log('Right');
+                        break; // Right key
+                    default:
+                        console.log(code); // Everything else
+                }
+            } else if (e.type === 'keyup') {
+                switch (code) {
+                    case 37:
+                        this.player.clearSpeed();
+                        console.log('Left');
+                        break; // Left key
+                    case 38:
+                        this.player.clearSpeed();
+                        console.log('Up');
+                        break; // Up key
+                    case 39:
+                        this.player.clearSpeed();
+                        console.log('Right');
+                        break; // Right key
+                    default:
+                        console.log(code); // Everything else
+                }
+            }
+        }
+    }]);
+
+    return Game;
+}();
+
+var game = new Game();
 // game.startGame();
 
-},{"./game-object.class":1}]},{},[2])
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9icm93c2VyLXBhY2svX3ByZWx1ZGUuanMiLCJhcHAvZ2FtZS1vYmplY3QuY2xhc3MudHMiLCJhcHAvZ2FtZS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTs7O0FDRUE7SUFZSSxZQUFZLENBQVMsRUFBRSxDQUFTLEVBQUUsQ0FBUyxFQUFFLENBQVMsRUFBRSxLQUFhLEVBQUUsR0FBUTtRQUh4RSxVQUFLLEdBQUcsQ0FBQyxDQUFDO1FBQ1YsYUFBUSxHQUFHLEtBQUssQ0FBQztRQUdwQixJQUFJLENBQUMsRUFBRSxHQUFHLENBQUMsQ0FBQztRQUNaLElBQUksQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDO1FBQ1gsSUFBSSxDQUFDLENBQUMsR0FBRyxDQUFDLENBQUM7UUFDWCxJQUFJLENBQUMsU0FBUyxHQUFHLElBQUksQ0FBQyxDQUFDLENBQUM7UUFDeEIsSUFBSSxDQUFDLEtBQUssR0FBRyxDQUFDLENBQUM7UUFDZixJQUFJLENBQUMsTUFBTSxHQUFHLENBQUMsQ0FBQztRQUNoQixJQUFJLENBQUMsT0FBTyxHQUFHLEdBQUcsQ0FBQztRQUNuQixJQUFJLENBQUMsS0FBSyxHQUFHLEtBQUssQ0FBQztRQUNuQixJQUFJLENBQUMsTUFBTSxFQUFFLENBQUM7SUFDbEIsQ0FBQztJQUNNLE1BQU07UUFDVCxJQUFJLENBQUMsT0FBTyxDQUFDLFNBQVMsR0FBRyxJQUFJLENBQUMsS0FBSyxDQUFDO1FBQ3BDLElBQUksQ0FBQyxPQUFPLENBQUMsUUFBUSxDQUFDLElBQUksQ0FBQyxDQUFDLEVBQUUsSUFBSSxDQUFDLENBQUMsRUFBRSxJQUFJLENBQUMsS0FBSyxFQUFFLElBQUksQ0FBQyxNQUFNLENBQUMsQ0FBQztJQUNuRSxDQUFDO0lBQ00sUUFBUSxDQUFDLEtBQWE7UUFDekIsSUFBSSxDQUFDLEtBQUssR0FBRyxLQUFLLENBQUM7UUFDbkIsTUFBTSxDQUFDLElBQUksQ0FBQztJQUNoQixDQUFDO0lBQ00sV0FBVztRQUNkLElB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QyxNQUFNLENBQUMsSUFBSSxFQUFFLENBQUM7Z0JBQUMsT0FBTyxDQUFDLEdBQUcsQ0FBQyxJQUFJLENBQUMsQ0FBQztnQkFBQyxLQUFLLENBQUMsQ0FBQyxTQUFTO1lBQ2hFLEtBQUssRUFBRTtnQkFBRSxJQUFJLENBQUMsTUFBTSxDQUFDLFNBQVMsRUFBRSxDQUFDO2dCQUFDLE9BQU8sQ0FBQyxHQUFHLENBQUMsT0FBTyxDQUFDLENBQUM7Z0JBQUMsS0FBSyxDQUFDLENBQUMsWUFBWTtZQUMzRSxLQUFLLEVBQUU7Z0JBQUUsT0FBTyxDQUFDLEdBQUcsQ0FBQyxNQUFNLENBQUMsQ0FBQztnQkFBQyxLQUFLLENBQUMsQ0FBQyxXQUFXO1lBQ2hELFNBQVMsT0FBTyxDQUFDLEdBQUcsQ0FBQyxJQUFJLENBQUMsQ0FBQyxDQUFDLGtCQUFrQjtRQUNsRCxDQUFDO0lBQ0gsQ0FBQztDQUNGO0FBQ0QsTUFBTSxJQUFJLEdBQUcsSUFBSSxJQUFJLEVBQUUsQ0FBQztBQUN4QixvQkFBb0IiLCJmaWxlIjoiZ2VuZXJhdGVkLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXNDb250ZW50IjpbIihmdW5jdGlvbiBlKHQsbixyKXtmdW5jdGlvbiBzKG8sdSl7aWYoIW5bb10pe2lmKCF0W29dKXt2YXIgYT10eXBlb2YgcmVxdWlyZT09XCJmdW5jdGlvblwiJiZyZXF1aXJlO2lmKCF1JiZhKXJldHVybiBhKG8sITApO2lmKGkpcmV0dXJuIGkobywhMCk7dmFyIGY9bmV3IEVycm9yKFwiQ2Fubm90IGZpbmQgbW9kdWxlICdcIitvK1wiJ1wiKTt0aHJvdyBmLmNvZGU9XCJNT0RVTEVfTk9UX0ZPVU5EXCIsZn12YXIgbD1uW29dPXtleHBvcnRzOnt9fTt0W29dWzBdLmNhbGwobC5leHBvcnRzLGZ1bmN0aW9uKGUpe3ZhciBuPXRbb11bMV1bZV07cmV0dXJuIHMobj9uOmUpfSxsLGwuZXhwb3J0cyxlLHQsbixyKX1yZXR1cm4gbltvXS5leHBvcnRzfXZhciBpPXR5cGVvZiByZXF1aXJlPT1cImZ1bmN0aW9uXCImJnJlcXVpcmU7Zm9yKHZhciBvPTA7bzxyLmxlbmd0aDtvKyspcyhyW29dKTtyZXR1cm4gc30pIiwiaW1wb3J0IHsgSUdhbWVPYmplY3QgfSBmcm9tICcuL2dhbWUtb2JqZWN0LmludGVyZmFjZSc7XG5cbmV4cG9ydCBjbGFzcyBHYW1lT2JqZWN0IGltcGxlbWVudHMgSUdhbWVPYmplY3Qge1xuICAgIHB1YmxpYyBocDogbnVtYmVyO1xuICAgIHB1YmxpYyB4OiBudW1iZXI7XG4gICAgcHVibGljIHk6IG51bWJlcjtcbiAgICBwdWJsaWMgb3JpZ2luYWxZOiBudW1iZXI7XG4gICAgcHVibGljIHdpZHRoOiBudW1iZXI7XG4gICAgcHVibGljIGhlaWdodDogbnVtYmVyO1xuICAgIHB1YmxpYyBjb250ZXh0OiBhbnk7XG4gICAgcHVibGljIGNvbG9yOiBzdHJpbmc7XG4gICAgcHVibGljIHNwZWVkID0gMTtcbiAgICBwdWJsaWMgZnJlZVdpbGwgPSBmYWxzZTtcbiAgICBwdWJsaWMganVtcGluZzogYW55O1xuICAgIGNvbnN0cnVjdG9yKHg6IG51bWJlciwgeTogbnVtYmVyLCB3OiBudW1iZXIsIGg6IG51bWJlciwgY29sb3I6IHN0cmluZywgY3R4OiBhbnkpIHtcbiAgICAgICAgdGhpcy5ocCA9IDE7XG4gICAgICAgIHRoaXMueCA9IHg7XG4gICAgICAgIHRoaXMueSA9IHk7XG4gICAgICAgIHRoaXMub3JpZ2luYWxZID0gdGhpcy55O1xuICAgICAgICB0aGlzLndpZHRoID0gdztcbiAgICAgICAgdGhpcy5oZWlnaHQgPSBoO1xuICAgICAgICB0aGlzLmNvbnRleHQgPSBjdHg7XG4gICAgICAgIHRoaXMuY29sb3IgPSBjb2xvcjtcbiAgICAgICAgdGhpcy51cGRhdGUoKTtcbiAgICB9XG4gICAgcHVibGljIHVwZGF0ZSgpIHtcbiAgICAgICAgdGhpcy5jb250ZXh0LmZpbGxTdHlsZSA9IHRoaXMuY29sb3I7XG4gICAgICAgIHRoaXMuY29udGV4dC5maWxsUmVjdCh0aGlzLngsIHRoaXMueSwgdGhpcy53aWR0aCwgdGhpcy5oZWlnaHQpO1xuICAgIH1cbiAgICBwdWJsaWMgc2V0U3BlZWQoc3BlZWQ6IG51bWJlcikge1xuICAgICAgICB0aGlzLnNwZWVkID0gc3BlZWQ7XG4gICAgICAgIHJldHVybiB0aGlzO1xuICAgIH1cbiAgICBwdWJsaWMgYWRkRnJlZVdpbGwoKSB7XG4gICAgICAgIHRoaXMuZnJlZVdpbGwgPSB0cnVlO1xuICAgIH1cblxuICAgIHB1YmxpYyBtb3ZlRnJvbnQoKSB7XG4gICAgICAgIHRoaXMueCArPSAodGhpcy5zcGVlZCAqIDEwKTtcbiAgICB9XG4gICAgcHVibGljIG1vdmVCYWNrKCkge1xuICAgICAgICB0aGlzLnggLT0gKHRoaXMuc3BlZWQgKiAxMCk7XG4gICAgfVxuICAgIHB1YmxpYyBqdW1wKCkge1xuICAgICAgICBsZXQgZ29pbmdEb3duID0gZmFsc2U7XG4gICAgICAgIGNvbnN0IG1lID0gdGhpcztcbiAgICAgICAgY29uc3QgbGltaXQgPSAxNTA7XG4gICAgICAgIGNsZWFySW50ZXJ2YWwobWUuanVtcGluZyk7XG4gICAgICAgIHRoaXMuanVtcGluZyA9IHNldEludGVydmFsKCgpID0+IHtcbiAgICAgICAgICAgIGlmIChtZS55ID4gbGltaXQgJiYgIWdvaW5nRG93bikge1xuICAgICAgICAgICAgICAgIG1lLnkgLT0gMztcbiAgICAgICAgICAgICAgICBjb25zb2xlLmxvZygnanVtcGluZzogJyArIG1lLnkpO1xuICAgICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgICAgICBnb2luZ0Rvd24gPSB0cnVlO1xuICAgICAgICAgICAgICAgIG1lLnkgKz0gMztcbiAgICAgICAgICAgICAgICBpZiAobWUueSA+IG1lLm9yaWdpbmFsWSkge1xuICAgICAgICAgICAgICAgICAgICBjbGVhckludGVydmFsKG1lLmp1bXBpbmcpO1xuICAgICAgICAgICAgICAgICAgICBtZS55ID0gbWUub3JpZ2luYWxZO1xuICAgICAgICAgICAgICAgICAgICBnb2luZ0Rvd24gPSBmYWxzZTtcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICB9XG4gICAgICAgIH0sIDEwKTtcbiAgICB9XG59XG4iLCJpbXBvcnQgeyBHYW1lT2JqZWN0IH0gZnJvbSAnLi9nYW1lLW9iamVjdC5jbGFzcyc7XG5pbXBvcnQgeyBQbGF5ZXIgfSBmcm9tICcuL3BsYXllci5jbGFzcyc7XG5cbmNsYXNzIEdhbWUge1xuICBwcml2YXRlIGNhbnZhczogYW55O1xuICBwcml2YXRlIGNvbnRleHQ6IGFueTtcbiAgcHJpdmF0ZSBwbGF5ZXI6IEdhbWVPYmplY3Q7XG4gIHByaXZhdGUgZmxvb3I6IEdhbWVPYmplY3Q7XG4gIHByaXZhdGUgb2JzdGFjbGVzOiBHYW1lT2JqZWN0W107XG4gIHByaXZhdGUgZW5lbWllczogR2FtZU9iamVjdFtdO1xuICBwcml2YXRlIGxldmVsOiBudW1iZXI7XG4gIGNvbnN0cnVjdG9yKCkge1xuICAgIHRoaXMuc3RhcnRHYW1lKCk7XG4gIH1cblxuICBwdWJsaWMgc3RhcnRHYW1lKCkge1xuICAgIC8vIExldmVsIHRvIHBsYXlcbiAgICB0aGlzLmxldmVsID0gMTtcblxuICAgIC8vIENhbnZhcyBzZXR1cFxuICAgIHRoaXMuY2FudmFzID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2NhbnZhcycpO1xuICAgIHRoaXMuY2FudmFzLndpZHRoID0gODAwO1xuICAgIHRoaXMuY2FudmFzLmhlaWdodCA9IDI3MDtcbiAgICB0aGlzLmNvbnRleHQgPSB0aGlzLmNhbnZhcy5nZXRDb250ZXh0KCcyZCcpO1xuICAgIGRvY3VtZW50LmJvZHkuaW5zZXJ0QmVmb3JlKHRoaXMuY2FudmFzLCBkb2N1bWVudC5ib2R5LmNoaWxkTm9kZXNbMF0pO1xuXG4gICAgLy8gRnVuY3Rpb24gZm9yIGNhbnZhcyByZWZyZXNoaW5nXG4gICAgc2V0SW50ZXJ2YWwoKCkgPT4gdGhpcy51cGRhdGVHYW1lQXJlYSgpLCAyMCk7XG4gICAgXG4gICAgLy8gQWRkIGVsZW1lbnRzOiBwbGF5ZXJzLCBvYnN0YWNsZXMgYW5kIGVuZW1pZXNcbiAgICB0aGlzLnNldExldmVsRWxlbWVudHModGhpcy5sZXZlbCk7XG5cbiAgICB0aGlzLmFkZEV2ZW50cygpO1xuICB9XG4gIHByaXZhdGUgc2V0TGV2ZWxFbGVtZW50cyhsZXZlbDogbnVtYmVyKSB7XG4gICAgLy8gR2VuZXJhbCBlbGVtZW50c1xuICAgIHRoaXMuZmxvb3IgPSBuZXcgR2FtZU9iamVjdCgwLCAyNTAsIDgwMCwgMjAsICcjNjY3MjkyJywgdGhpcy5jb250ZXh0KTtcblxuICAgIHN3aXRjaCAobGV2ZWwpIHtcbiAgICAgIGNhc2UgMTpcbiAgICAgICAgLy8gQWRkIGVsZW1lbnRzOiBwbGF5ZXJzLCBvYnN0YWNsZXMgYW5kIGVuZW1pZXNcbiAgICAgICAgdGhpcy5wbGF5ZXIgPSBuZXcgR2FtZU9iamVjdCgyMCwgMjEwLCAxMCwgNDAsICcjOTA3ZDYxJywgdGhpcy5jb250ZXh0KS5zZXRTcGVlZCgxLjUpO1xuICAgICAgICB0aGlzLm9ic3RhY2xlcyA9IFtcbiAgICAgICAgICBuZXcgR2FtZU9iamVjdCgxMjAsIDIzMCwgMjAsIDIwLCAnIzhkOWRiNicsIHRoaXMuY29udGV4dCkuc2V0U3BlZWQoMCksXG4gICAgICAgICAgbmV3IEdhbWVPYmplY3QoMjgwLCAyMzAsIDIwLCAyMCwgJyM4ZDlkYjYnLCB0aGlzLmNvbnRleHQpLnNldFNwZWVkKDApLFxuICAgICAgICBdO1xuICAgICAgICB0aGlzLmVuZW1pZXMgPSBbXG4gICAgICAgICAgbmV3IEdhbWVPYmplY3QoMTUwLCAyMTAsIDEwLCA0MCwgJyNjODMzNDknLCB0aGlzLmNvbnRleHQpLnNldFNwZWVkKDEuMiksXG4gICAgICAgICAgbmV3IEdhbWVPYmplY3QoMjQwLCAyMTAsIDEwLCA0MCwgJyNjODMzNDknLCB0aGlzLmNvbnRleHQpLnNldFNwZWVkKDEuMiksXG4gICAgICAgICAgbmV3IEdhbWVPYmplY3QoNDgwLCAyMTAsIDEwLCA0MCwgJyNjODMzNDknLCB0aGlzLmNvbnRleHQpLnNldFNwZWVkKC44KSxcbiAgICAgICAgXTtcbiAgICAgICAgYnJlYWs7XG4gICAgfVxuICB9XG4gIHByaXZhdGUgY2xlYXIoKSB7XG4gICAgdGhpcy5jb250ZXh0LmNsZWFyUmVjdCgwLCAwLCB0aGlzLmNhbnZhcy53aWR0aCwgdGhpcy5jYW52YXMuaGVpZ2h0KTtcbiAgfVxuICBwcml2YXRlIHVwZGF0ZUdhbWVBcmVhKCkge1xuICAgIHRoaXMuY2xlYXIoKTtcbiAgICB0aGlzLnBsYXllci51cGRhdGUoKTtcbiAgICB0aGlzLm9ic3RhY2xlc1swXS51cGRhdGUoKTtcbiAgICB0aGlzLm9ic3RhY2xlc1sxXS51cGRhdGUoKTtcbiAgICB0aGlzLmVuZW1pZXNbMF0udXBkYXRlKCk7XG4gICAgdGhpcy5lbmVtaWVzWzFdLnVwZGF0ZSgpO1xuICAgIHRoaXMuZW5lbWllc1syXS51cGRhdGUoKTtcbiAgICB0aGlzLmZsb29yLnVwZGF0ZSgpO1xuICB9XG4gIHByaXZhdGUgYWRkRXZlbnRzKCkge1xuICAgIHdpbmRvdy5hZGRFdmVudExpc3RlbmVyKCdrZXlkb3duJywgKGUpID0+IHRoaXMuY2hlY2tLZXkoZSksIGZhbHNlKTtcbiAgfVxuICBwcml2YXRlIGNoZWNrS2V5KGU6IGFueSkge1xuICAgIGNvbnN0IGNvZGUgPSBlLmtleUNvZGU7XG4gICAgc3dpdGNoIChjb2RlKSB7XG5cbiAgICAgICAgY2FzZSAzNzogdGhpcy5wbGF5ZXIubW92ZUJhY2soKTsgY29uc29sZS5sb2coJ0xlZnQnKTsgYnJlYWs7IC8vIExlZnQga2V5XG4gICAgICAgIGNhc2UgMzg6IHRoaXMucGxheWVyLmp1bXAoKTsgY29uc29sZS5sb2coJ1VwJyk7IGJyZWFrOyAvLyBVcCBrZXlcbiAgICAgICAgY2FzZSAzOTogdGhpcy5wbGF5ZXIubW92ZUZyb250KCk7IGNvbnNvbGUubG9nKCdSaWdodCcpOyBicmVhazsgLy8gUmlnaHQga2V5XG4gICAgICAgIGNhc2UgNDA6IGNvbnNvbGUubG9nKCdEb3duJyk7IGJyZWFrOyAvLyBEb3duIGtleVxuICAgICAgICBkZWZhdWx0OiBjb25zb2xlLmxvZyhjb2RlKTsgLy8gRXZlcnl0aGluZyBlbHNlXG4gICAgfVxuICB9XG59XG5jb25zdCBnYW1lID0gbmV3IEdhbWUoKTtcbi8vIGdhbWUuc3RhcnRHYW1lKCk7XG4iXX0=
+},{"./enemy-a.class":1,"./enemy-b.class":2,"./game-object.class":3,"./obstacle.class":5,"./player.class":6}],5:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+
+var Obstacle = function () {
+    function Obstacle(x, y, w, h, color, ctx) {
+        _classCallCheck(this, Obstacle);
+
+        this.x = x;
+        this.y = y;
+        this.width = w;
+        this.height = h;
+        this.context = ctx;
+        this.color = color;
+        this.update();
+    }
+
+    _createClass(Obstacle, [{
+        key: "update",
+        value: function update() {
+            this.context.fillStyle = this.color;
+            this.context.fillRect(this.x, this.y, this.width, this.height);
+        }
+    }]);
+
+    return Obstacle;
+}();
+
+exports.Obstacle = Obstacle;
+
+},{}],6:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var game_object_class_1 = require("./game-object.class");
+
+var Player = function (_game_object_class_1$) {
+    _inherits(Player, _game_object_class_1$);
+
+    function Player(x, y, w, h, color, ctx) {
+        _classCallCheck(this, Player);
+
+        return _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this, x, y, w, h, color, ctx));
+    }
+
+    _createClass(Player, [{
+        key: "jump",
+        value: function jump() {
+            var goingDown = false;
+            var me = this;
+            var limit = 150;
+            clearInterval(me.jumping);
+            this.jumping = setInterval(function () {
+                if (me.y > limit && !goingDown) {
+                    me.y -= 3;
+                    console.log('jumping: ' + me.y);
+                } else {
+                    goingDown = true;
+                    me.y += 3;
+                    if (me.y > me.originalY) {
+                        clearInterval(me.jumping);
+                        me.y = me.originalY;
+                        goingDown = false;
+                    }
+                }
+            }, 10);
+        }
+    }]);
+
+    return Player;
+}(game_object_class_1.GameObject);
+
+exports.Player = Player;
+
+},{"./game-object.class":3}]},{},[4])
+
+//# sourceMappingURL=bundle.js.map
