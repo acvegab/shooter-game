@@ -1,8 +1,11 @@
-import { GameObject } from './game-object.class';
+import { Bullet } from './bullet';
+import { GameObject } from './game-object';
 
 export class Player extends GameObject {
-    constructor(x: number, y: number, w: number, h: number, color: string, ctx: any) {
-        super(x, y, w, h, color, ctx);
+    public bullets: Bullet[];
+    constructor(x: number, y: number, ctx: any) {
+        super(x, y, 10, 40, '#907d61', ctx);
+        this.bullets = [];
     }
     public jump() {
         let goingDown = false;
@@ -12,7 +15,6 @@ export class Player extends GameObject {
         this.jumping = setInterval(() => {
             if (me.y > limit && !goingDown) {
                 me.y -= 3;
-                console.log('jumping: ' + me.y);
             } else {
                 goingDown = true;
                 me.y += 3;
@@ -24,5 +26,7 @@ export class Player extends GameObject {
             }
         }, 10);
     }
-
+    public shoot() {
+        this.bullets.push(new Bullet(this.direction, this.x, this.y, this.context));
+    }
 }

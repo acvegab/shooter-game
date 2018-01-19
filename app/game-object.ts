@@ -9,9 +9,10 @@ export class GameObject implements IGameObject {
     public height: number;
     public context: any;
     public color: string;
-    public speed = 10;
+    public speed = 20;
     public speedX = 0;
     public jumping: any;
+    public direction = 'front';
     constructor(x: number, y: number, w: number, h: number, color: string, ctx: any) {
         this.hp = 1;
         this.x = x;
@@ -30,10 +31,12 @@ export class GameObject implements IGameObject {
         this.context.fillRect(this.x, this.y, this.width, this.height);
     }
     public moveFront() {
-        this.speedX += this.speed;
+        this.speedX = this.speed;
+        this.direction = 'front';
     }
     public moveBack() {
-        this.speedX -= this.speed;
+        this.speedX = this.speed * -1;
+        this.direction = 'back';
     }
     public clearSpeed() {
         this.speedX = 0;

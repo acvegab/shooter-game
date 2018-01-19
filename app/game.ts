@@ -1,8 +1,8 @@
-import { EnemyA } from './enemy-a.class';
-import { EnemyB } from './enemy-b.class';
-import { GameObject } from './game-object.class';
-import { Obstacle } from './obstacle.class';
-import { Player } from './player.class';
+import { EnemyA } from './enemy-a';
+import { EnemyB } from './enemy-b';
+import { GameObject } from './game-object';
+import { Obstacle } from './obstacle';
+import { Player } from './player';
 
 class Game {
   private canvas: any;
@@ -21,14 +21,8 @@ class Game {
     this.level = 1;
 
     // Canvas setup
-    this.canvas = document.getElementById('canvas');
-    this.canvas.width = 800;
-    this.canvas.height = 270;
-    this.context = this.canvas.getContext('2d');
-    document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+    this.setCanvas();
 
-    // Function for canvas refreshing
-    setInterval(() => this.updateGameArea(), 500);
     // Add elements: players, obstacles and enemies
     this.createPlayer();
     this.createObstacles();
@@ -36,6 +30,15 @@ class Game {
     this.setLevelElements(this.level);
 
     this.addEvents();
+  }
+  private setCanvas() {
+    this.canvas = document.getElementById('canvas');
+    this.canvas.width = 800;
+    this.canvas.height = 270;
+    this.context = this.canvas.getContext('2d');
+    document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+    // Function for canvas refreshing
+    setInterval(() => this.updateGameArea(), 20);
   }
   private setLevelElements(level: number) {
     // General elements
@@ -47,7 +50,7 @@ class Game {
     }
   }
   private createPlayer() {
-    this.player = new Player(20, 210, 10, 40, '#907d61', this.context);
+    this.player = new Player(20, 210, this.context);
   }
   private createObstacles() {
     this.obstacles = [
@@ -57,9 +60,9 @@ class Game {
   }
   private createEnemies() {
     this.enemies = [
-      new EnemyA(150, 210, 10, 40, '#c83349', this.context),
-      new EnemyA(240, 210, 10, 40, '#c83349', this.context),
-      new EnemyB(480, 210, 10, 40, '#c83349', this.context),
+      new EnemyA(150, 210, this.context),
+      new EnemyA(240, 210, this.context),
+      new EnemyB(480, 210, this.context),
     ];
   }
   private clear() {
@@ -67,13 +70,33 @@ class Game {
   }
   private updateGameArea() {
     this.clear();
-    this.player.update();
-    this.obstacles[0].update();
-    this.obstacles[1].update();
-    this.enemies[0].update();
-    this.enemies[1].update();
-    this.enemies[2].update();
     this.floor.update();
+    this.player.update();
+    this.renderEnemies();
+    this.renderObstacles();
+    this.renderBullets();
+  }
+  private renderEnemies() {
+    for (const enemy of this.enemies) {
+      enemy.update();
+    }
+  }
+  private renderObstacles() {
+    for (const obstacle of this.obstacles) {
+      obstacle.update();
+    }
+  }
+  private renderBullets() {
+    for (const bullet of this.player.bullets) {
+      // check if is still visible
+      if (bullet.x > this.canvas.width || bullet.x < 0) {
+        const index = this.player.bullets.indexOf(bullet);
+        if (index > -1) {
+          this.player.bullets.splice(index, 1);
+        }
+      }
+      bullet.update();
+    }
   }
   private addEvents() {
     window.addEventListener('keydown', (e) => this.checkKey(e), false);
@@ -83,16 +106,16 @@ class Game {
     const code = e.keyCode;
     if (e.type === 'keydown') {
       switch (code) {
-          case 37: this.player.moveBack(); console.log('Left'); break; // Left key
-          case 38: this.player.jump(); console.log('Up'); break; // Up key
-          case 39: this.player.moveFront(); console.log('Right'); break; // Right key
+          case 32: this.player.shoot(); break; // Left key
+          case 37: this.player.moveBack(); break; // Left key
+          case 38: this.player.jump(); break; // Up key
+          case 39: this.player.moveFront(); break; // Right key
           default: console.log(code); // Everything else
       }
     } else if (e.type === 'keyup') {
       switch (code) {
-          case 37: this.player.clearSpeed(); console.log('Left'); break; // Left key
-          case 38: this.player.clearSpeed(); console.log('Up'); break; // Up key
-          case 39: this.player.clearSpeed(); console.log('Right'); break; // Right key
+          case 37: this.player.clearSpeed(); break; // Left key
+          case 39: this.player.clearSpeed(); break; // Right key
           default: console.log(code); // Everything else
       }
     }
