@@ -1,0 +1,38 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "callable-types": true,
+        "class-name": true,
+        "curly": true,
+        "eofline": true,
+        "no-console": [
+        true,
+        "debug",
+        "info",
+        "time",
+        "timeEnd",
+        "trace"
+        ],
+        "quotemark": [
+            true,
+            "single"
+        ],
+        "semicolon": [
+        true,
+        "always"
+        ],
+        "import-spacing": true,
+        "no-empty-interface": false,
+        "directive-selector": [
+        true,
+        "attribute",
+        "app",
+        "camelCase"
+        ]
+    },
+    "rulesDirectory": []
+}
