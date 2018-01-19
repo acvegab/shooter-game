@@ -21,6 +21,8 @@ var Bullet = function (_game_object_1$GameOb) {
         var _this = _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, x, y, 15, 15, '#ffecb2', ctx));
 
         _this.selfDestroy = false;
+        _this.colors = ['#ffd966', '#ffdf7f', '#ffe699', '#ffecb2', '#fff2cc', '#fff9e5', '#ffffff'];
+        _this.color = _this.colors[Math.floor(Math.random() * 6) + 0];
         _this.originX = x;
         _this.direction = direction;
         _this.shootBullet();
