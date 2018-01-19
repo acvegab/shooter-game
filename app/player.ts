@@ -18,15 +18,16 @@ export class Player extends GameObject {
             } else {
                 goingDown = true;
                 me.y += 3;
-                if (me.y > me.originalY) {
+                if (me.y > me.originY) {
                     clearInterval(me.jumping);
-                    me.y = me.originalY;
+                    me.y = me.originY;
                     goingDown = false;
                 }
             }
         }, 10);
     }
     public shoot() {
-        this.bullets.push(new Bullet(this.direction, this.x, this.y, this.context));
+        const xPos = this.direction === 'front' ? this.x + this.width : this.x - 15;
+        this.bullets.push(new Bullet(this.direction, xPos, this.y, this.context));
     }
 }

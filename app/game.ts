@@ -72,13 +72,36 @@ class Game {
     this.clear();
     this.floor.update();
     this.player.update();
+    this.renderBullets();
     this.renderEnemies();
     this.renderObstacles();
-    this.renderBullets();
   }
+  // private renderPlayer() {
+  //   for (const obstacle of this.obstacles) {
+  //     this.checkCollision(this.player, obstacle);
+  //   }
+  // }
   private renderEnemies() {
     for (const enemy of this.enemies) {
-      enemy.update();
+      // check if it was hit by any bullet
+      for (const bullet of this.player.bullets) {
+        const collission = this.checkCollision(enemy, bullet);
+        if (collission) {
+          enemy.hp--;
+          const index = this.player.bullets.indexOf(bullet);
+          if (index > -1) {
+            this.player.bullets.splice(index, 1);
+          }
+        }
+      }
+      if (enemy.hp > 0) {
+        enemy.update();
+      } else {
+        const index = this.enemies.indexOf(enemy);
+        if (index > -1) {
+          this.enemies.splice(index, 1);
+        }
+      }
     }
   }
   private renderObstacles() {
@@ -89,7 +112,7 @@ class Game {
   private renderBullets() {
     for (const bullet of this.player.bullets) {
       // check if is still visible
-      if (bullet.x > this.canvas.width || bullet.x < 0) {
+      if (bullet.selfDestroy) {
         const index = this.player.bullets.indexOf(bullet);
         if (index > -1) {
           this.player.bullets.splice(index, 1);
@@ -97,6 +120,12 @@ class Game {
       }
       bullet.update();
     }
+  }
+  private checkCollision(objA: GameObject, objB: GameObject) {
+    const pA = objA.x + objA.width;
+    const pB1 = objB.x;
+    const pB2 = objB.x + objB.width;
+    return pA >= pB1 && pA <= pB2;
   }
   private addEvents() {
     window.addEventListener('keydown', (e) => this.checkKey(e), false);
@@ -110,13 +139,11 @@ class Game {
           case 37: this.player.moveBack(); break; // Left key
           case 38: this.player.jump(); break; // Up key
           case 39: this.player.moveFront(); break; // Right key
-          default: console.log(code); // Everything else
       }
     } else if (e.type === 'keyup') {
       switch (code) {
           case 37: this.player.clearSpeed(); break; // Left key
           case 39: this.player.clearSpeed(); break; // Right key
-          default: console.log(code); // Everything else
       }
     }
   }

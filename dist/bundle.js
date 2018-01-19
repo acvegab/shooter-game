@@ -20,6 +20,8 @@ var Bullet = function (_game_object_1$GameOb) {
 
         var _this = _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, x, y, 15, 15, '#ffecb2', ctx));
 
+        _this.selfDestroy = false;
+        _this.originX = x;
         _this.direction = direction;
         _this.shootBullet();
         return _this;
@@ -38,7 +40,8 @@ var Bullet = function (_game_object_1$GameOb) {
                 } else if (_this2.direction === 'back') {
                     me.x -= 3;
                 }
-                if (me.x > me.context.canvas.width || me.x < 0) {
+                if (me.x > me.context.canvas.width || me.x < 0 || Math.abs(me.x - me.originX) >= 150) {
+                    _this2.selfDestroy = true;
                     clearInterval(me.missile);
                 }
             }, 10);
@@ -68,9 +71,8 @@ var EnemyA = function (_game_object_1$GameOb) {
     function EnemyA(x, y, ctx) {
         _classCallCheck(this, EnemyA);
 
-        var _this = _possibleConstructorReturn(this, (EnemyA.__proto__ || Object.getPrototypeOf(EnemyA)).call(this, x, y, 10, 40, '#c83349', ctx));
+        var _this = _possibleConstructorReturn(this, (EnemyA.__proto__ || Object.getPrototypeOf(EnemyA)).call(this, Math.floor(Math.random() * 700) + 100, y, 10, 40, '#c83349', ctx));
 
-        _this.freeWill = false;
         _this.speed = .8;
         return _this;
     }
@@ -98,9 +100,8 @@ var EnemyB = function (_game_object_1$GameOb) {
     function EnemyB(x, y, ctx) {
         _classCallCheck(this, EnemyB);
 
-        var _this = _possibleConstructorReturn(this, (EnemyB.__proto__ || Object.getPrototypeOf(EnemyB)).call(this, x, y - 10, 10, 50, '#8a1830', ctx));
+        var _this = _possibleConstructorReturn(this, (EnemyB.__proto__ || Object.getPrototypeOf(EnemyB)).call(this, Math.floor(Math.random() * 700) + 100, y - 10, 10, 50, '#8a1830', ctx));
 
-        _this.freeWill = true;
         _this.speed = 1.2;
         return _this;
     }
@@ -129,7 +130,8 @@ var GameObject = function () {
         this.hp = 1;
         this.x = x;
         this.y = y;
-        this.originalY = this.y;
+        this.originX = x;
+        this.originY = y;
         this.width = w;
         this.height = h;
         this.context = ctx;
@@ -148,19 +150,28 @@ var GameObject = function () {
     }, {
         key: "moveFront",
         value: function moveFront() {
-            this.speedX = this.speed;
+            if (this.x + this.speed < this.context.canvas.width) {
+                this.speedX = this.speed;
+            }
             this.direction = 'front';
         }
     }, {
         key: "moveBack",
         value: function moveBack() {
-            this.speedX = this.speed * -1;
+            if (this.x > this.width) {
+                this.speedX = this.speed * -1;
+            }
             this.direction = 'back';
         }
     }, {
         key: "clearSpeed",
         value: function clearSpeed() {
             this.speedX = 0;
+        }
+    }, {
+        key: "freeWill",
+        value: function freeWill() {
+            return false;
         }
     }]);
 
@@ -256,10 +267,16 @@ var Game = function () {
             this.clear();
             this.floor.update();
             this.player.update();
+            this.renderBullets();
             this.renderEnemies();
             this.renderObstacles();
-            this.renderBullets();
         }
+        // private renderPlayer() {
+        //   for (const obstacle of this.obstacles) {
+        //     this.checkCollision(this.player, obstacle);
+        //   }
+        // }
+
     }, {
         key: "renderEnemies",
         value: function renderEnemies() {
@@ -271,7 +288,47 @@ var Game = function () {
                 for (var _iterator = this.enemies[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                     var enemy = _step.value;
 
-                    enemy.update();
+                    // check if it was hit by any bullet
+                    var _iteratorNormalCompletion2 = true;
+                    var _didIteratorError2 = false;
+                    var _iteratorError2 = undefined;
+
+                    try {
+                        for (var _iterator2 = this.player.bullets[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                            var bullet = _step2.value;
+
+                            var collission = this.checkCollision(enemy, bullet);
+                            if (collission) {
+                                enemy.hp--;
+                                var _index = this.player.bullets.indexOf(bullet);
+                                if (_index > -1) {
+                                    this.player.bullets.splice(_index, 1);
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError2 = true;
+                        _iteratorError2 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                _iterator2.return();
+                            }
+                        } finally {
+                            if (_didIteratorError2) {
+                                throw _iteratorError2;
+                            }
+                        }
+                    }
+
+                    if (enemy.hp > 0) {
+                        enemy.update();
+                    } else {
+                        var index = this.enemies.indexOf(enemy);
+                        if (index > -1) {
+                            this.enemies.splice(index, 1);
+                        }
+                    }
                 }
             } catch (err) {
                 _didIteratorError = true;
@@ -291,50 +348,15 @@ var Game = function () {
     }, {
         key: "renderObstacles",
         value: function renderObstacles() {
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
-
-            try {
-                for (var _iterator2 = this.obstacles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var obstacle = _step2.value;
-
-                    obstacle.update();
-                }
-            } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
-                    }
-                } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
-                    }
-                }
-            }
-        }
-    }, {
-        key: "renderBullets",
-        value: function renderBullets() {
             var _iteratorNormalCompletion3 = true;
             var _didIteratorError3 = false;
             var _iteratorError3 = undefined;
 
             try {
-                for (var _iterator3 = this.player.bullets[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var bullet = _step3.value;
+                for (var _iterator3 = this.obstacles[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var obstacle = _step3.value;
 
-                    // check if is still visible
-                    if (bullet.x > this.canvas.width || bullet.x < 0) {
-                        var index = this.player.bullets.indexOf(bullet);
-                        if (index > -1) {
-                            this.player.bullets.splice(index, 1);
-                        }
-                    }
-                    bullet.update();
+                    obstacle.update();
                 }
             } catch (err) {
                 _didIteratorError3 = true;
@@ -350,6 +372,49 @@ var Game = function () {
                     }
                 }
             }
+        }
+    }, {
+        key: "renderBullets",
+        value: function renderBullets() {
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = this.player.bullets[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var bullet = _step4.value;
+
+                    // check if is still visible
+                    if (bullet.selfDestroy) {
+                        var index = this.player.bullets.indexOf(bullet);
+                        if (index > -1) {
+                            this.player.bullets.splice(index, 1);
+                        }
+                    }
+                    bullet.update();
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
+                    }
+                }
+            }
+        }
+    }, {
+        key: "checkCollision",
+        value: function checkCollision(objA, objB) {
+            var pA = objA.x + objA.width;
+            var pB1 = objB.x;
+            var pB2 = objB.x + objB.width;
+            return pA >= pB1 && pA <= pB2;
         }
     }, {
         key: "addEvents",
@@ -381,8 +446,6 @@ var Game = function () {
                     case 39:
                         this.player.moveFront();
                         break; // Right key
-                    default:
-                        console.log(code); // Everything else
                 }
             } else if (e.type === 'keyup') {
                 switch (code) {
@@ -392,8 +455,6 @@ var Game = function () {
                     case 39:
                         this.player.clearSpeed();
                         break; // Right key
-                    default:
-                        console.log(code); // Everything else
                 }
             }
         }
@@ -480,9 +541,9 @@ var Player = function (_game_object_1$GameOb) {
                 } else {
                     goingDown = true;
                     me.y += 3;
-                    if (me.y > me.originalY) {
+                    if (me.y > me.originY) {
                         clearInterval(me.jumping);
-                        me.y = me.originalY;
+                        me.y = me.originY;
                         goingDown = false;
                     }
                 }
@@ -491,7 +552,8 @@ var Player = function (_game_object_1$GameOb) {
     }, {
         key: "shoot",
         value: function shoot() {
-            this.bullets.push(new bullet_1.Bullet(this.direction, this.x, this.y, this.context));
+            var xPos = this.direction === 'front' ? this.x + this.width : this.x - 15;
+            this.bullets.push(new bullet_1.Bullet(this.direction, xPos, this.y, this.context));
         }
     }]);
 

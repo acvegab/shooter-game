@@ -4,7 +4,8 @@ export class GameObject implements IGameObject {
     public hp: number;
     public x: number;
     public y: number;
-    public originalY: number;
+    public originX: number;
+    public originY: number;
     public width: number;
     public height: number;
     public context: any;
@@ -17,7 +18,8 @@ export class GameObject implements IGameObject {
         this.hp = 1;
         this.x = x;
         this.y = y;
-        this.originalY = this.y;
+        this.originX = x;
+        this.originY = y;
         this.width = w;
         this.height = h;
         this.context = ctx;
@@ -31,14 +33,21 @@ export class GameObject implements IGameObject {
         this.context.fillRect(this.x, this.y, this.width, this.height);
     }
     public moveFront() {
-        this.speedX = this.speed;
+        if ( (this.x + this.speed) < this.context.canvas.width) {
+            this.speedX = this.speed;
+        }
         this.direction = 'front';
     }
     public moveBack() {
-        this.speedX = this.speed * -1;
+        if ( this.x > this.width ) {
+            this.speedX = this.speed * -1;
+        }
         this.direction = 'back';
     }
     public clearSpeed() {
         this.speedX = 0;
+    }
+    public freeWill() {
+        return false;
     }
 }
