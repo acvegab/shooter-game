@@ -1,8 +1,13 @@
 # Best Shooter Game Ever
-#
-# Installation
-Clone the repository and then run the next commands:
+
+## Installation
+- Clone the repository
+
+- Run the following commands:
 ```
 	npm install
+```
+and then
+```
 	gulp
 ```
