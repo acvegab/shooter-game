@@ -76,11 +76,6 @@ class Game {
     this.renderEnemies();
     this.renderObstacles();
   }
-  // private renderPlayer() {
-  //   for (const obstacle of this.obstacles) {
-  //     this.checkCollision(this.player, obstacle);
-  //   }
-  // }
   private renderEnemies() {
     for (const enemy of this.enemies) {
       // check if it was hit by any bullet
