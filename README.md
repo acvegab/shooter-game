@@ -13,3 +13,7 @@ and then
 ```
 
 Now run http://localhost:8080/ in your browser.
+
+# TODO:
+
+- Fix dependency issues
